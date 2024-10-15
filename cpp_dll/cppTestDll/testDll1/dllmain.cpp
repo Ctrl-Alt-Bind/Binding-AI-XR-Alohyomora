@@ -23,14 +23,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 }
 
 // 데이터 처리 후 처리 시간을 반환하는 함수
-extern "C" __declspec(dllexport) double ProcessDataAndReturnTime() {
+extern "C" __declspec(dllexport) double ProcessDataAndReturnTime(int dataNum) {
     using namespace std::chrono;
 
     // 시작 시간
     auto start = high_resolution_clock::now();
 
     // 데이터 처리 (여기서는 예시로 간단한 루프 사용)
-    for (volatile int i = 0; i < 1000000; ++i);
+    for (volatile int i = 0; i < dataNum; ++i);
 
     // 종료 시간
     auto end = high_resolution_clock::now();
@@ -44,18 +44,23 @@ extern "C" __declspec(dllexport) double ProcessDataAndReturnTime() {
 extern "C" __declspec(dllexport) int* GenerateRandomVector(int size, int* outsize) {
     static std::vector<int> randomData;
 
-    // 벡터 크기 설정
-    randomData.reserve(size);
+    //randomData.clear();
+    // 벡터 크기 설정 (resize로 실제 크기 변경)
+    randomData.resize(size);  // resize는 벡터의 크기를 설정하고 초기화함
 
-    // 난수 생성
-    std::srand(static_cast<unsigned>(std::time(0)));
-    for (int i = 0; i < size; i++)
-    {
-        randomData[i] = std::rand() % 100; // 0 ~ 99 사이의 난수 생성
+    // 난수 생성 (한 번만 시드를 설정)
+    static bool isSeedSet = false;
+    if (!isSeedSet) {
+        std::srand(static_cast<unsigned>(std::time(0)));
+        isSeedSet = true;
     }
-    
+
+    // 난수로 벡터를 채움
+    for (int i = 0; i < size; i++) {
+        randomData[i] = std::rand() % 100;  // 0 ~ 99 사이의 난수 생성
+    }
+
     // 데이터 크기 설정
-    *outsize = randomData.size();
-    // 벡터 데이터 포인터를 반환
-    return randomData.data();
+    *outsize = randomData.size();  // 벡터의 크기를 outsize에 저장
+    return (size == 0) ? nullptr : randomData.data();      // 벡터의 포인터 반환
 }
