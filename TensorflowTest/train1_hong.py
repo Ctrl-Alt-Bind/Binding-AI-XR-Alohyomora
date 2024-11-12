@@ -148,15 +148,8 @@ plt.legend(['train','validation'], loc='best')
 plt.grid()
 plt.show()
 
-
 # 모델을 .tflite 형식으로 저장
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 with open("model.tflite", "wb") as f:
     f.write(tflite_model)
-
-# 모델을 .onnx 형식으로 저장
-import tf2onnx
-spec = (tf.TensorSpec((None, 32, 32, 3), tf.float32),)
-output_path = "model.onnx"
-model_proto, _ = tf2onnx.convert.from_keras(model, input_signature=spec, output_path=output_path)
