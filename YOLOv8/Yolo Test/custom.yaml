@@ -1,0 +1,15 @@
+train: C:/Users/aloho/Github/Binding-AI-XR-Alohyomora/DataSet/indoor_object_detection_dataset/train/images
+val: C:/Users/aloho/Github/Binding-AI-XR-Alohyomora/DataSet/indoor_object_detection_dataset/valid/images
+test: C:/Users/aloho/Github/Binding-AI-XR-Alohyomora/DataSet/indoor_object_detection_dataset/test/images
+nc: 10
+names: 
+- door
+- cabinetDoor
+- refrigeratorDoor
+- window
+- chair
+- table
+- cabinet
+- couch
+- openedDoor
+- pole
